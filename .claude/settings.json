@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv\\\\Scripts\\\\pip install *)",
+      "PowerShell(& \"e:\\\\Workstation\\\\Web - Workspace\\\\TarotSystem3\\\\.venv\\\\Scripts\\\\pip.exe\" install python-dotenv==1.0.0 2>&1)",
+      "PowerShell(& \"e:\\\\Workstation\\\\Web - Workspace\\\\TarotSystem3\\\\.venv\\\\Scripts\\\\python.exe\" -m pip install python-dotenv 2>&1; Write-Host \"Exit: $LASTEXITCODE\")",
+      "PowerShell(& \"e:\\\\Workstation\\\\Web - Workspace\\\\TarotSystem3\\\\.venv\\\\Scripts\\\\python.exe\" -m pip install -r \"e:\\\\Workstation\\\\Web - Workspace\\\\TarotSystem3\\\\requirements.txt\" 2>&1; Write-Host \"Exit: $LASTEXITCODE\")"
+    ]
+  }
+}
