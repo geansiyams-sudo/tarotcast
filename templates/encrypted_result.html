@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Encrypted Result - Daily Tarot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg fixed-top custom-bar">
+            <div class="container-fluid">
+                <!-- Logo -->
+                <a class="navbar-brand d-flex align-items-center" href="#">
+                    <img src="{{ url_for('static', filename='image/tarologo.png') }}" alt="Tarot Logo" class="me-2"
+                        style="max-width: 50 px ; max-height: 50px;">
+                    <span style="
+  font-size: larger;
+  font-family: Geneva;
+  letter-spacing: 3px;              /* adds spacing between letters */
+  padding: 6px 12px;                /* adds gap around the text */
+  text-shadow: 0 2px 6px rgba(255, 193, 7, 0.5); /* warm golden glow */
+  display: inline-block;            /* ensures padding shows properly */
+  font-weight: bold;
+">
+                        DAILY TAROT
+                    </span>
+                </a>
+
+                <!-- Navbar Toggler (for mobile) -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Menu -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/dashboard">HOME</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/tarot_search">SEARCH CARDS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/about">ABOUT</a>
+                        </li>
+                        <li class="nav-item">
+                            <!-- Logout Button -->
+                            <form id="logoutForm" action="/logout" method="post" onsubmit="return confirmLogout()">
+                                <button type="submit" class="logout-btn">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid dashboard-container" style="min-height: 100vh; padding-top: 40px;">
+        <div class="container-fluid px-3">
+            <div class="row justify-content-center">
+                <div class="col-12 col-xl-11">
+                    <div class="card shadow-lg border-0"
+                        style="background: linear-gradient(180deg, #f9f5ff 0%, #ede7f6 100%); border-radius: 20px;">
+                        <div class="card-body p-5">
+                            <h2 class="text-center mb-4" style="color: #7b1fa2;">
+                                <i class="bi bi-check-circle-fill text-success me-2"></i>Encryption Complete!
+                            </h2>
+
+                            <!-- Three Column Layout: Original Quote, Encrypted Message, QR Code -->
+                            <div class="row g-5">
+                                <!-- Original Message -->
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="card h-100 border-0"
+                                        style="background: linear-gradient(180deg, #fffdf5 0%, #fff5d1 100%); border-radius: 15px;">
+                                        <div class="card-body p-5">
+                                            <h5 class="card-title text-primary mb-4">
+                                                <i class="bi bi-file-text me-2"></i>Original Quote
+                                            </h5>
+                                            <blockquote class="fst-italic mb-0"
+                                                style="color: #5a4a00; font-size: 1rem; line-height: 1.5;">
+                                                "{{ original_message }}"
+                                            </blockquote>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Encrypted Message -->
+                                <div class="col-lg-4 col-md-6">
+                                    <div class="card h-100 border-0"
+                                        style="background: linear-gradient(180deg, #e8f5e8 0%, #d4edda 100%); border-radius: 15px;">
+                                        <div class="card-body p-5">
+                                            <h5 class="card-title text-success mb-4">
+                                                <i class="bi bi-shield-lock me-2"></i>Encrypted Message
+                                                <small class="text-muted d-block mt-4">{{ cipher_name }}</small>
+                                            </h5>
+                                            <div class="encrypted-text p-4"
+                                                style="background: rgba(255,255,255,0.7); border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.95rem; color: #2d5a2d; word-break: break-all; max-height: 180px; overflow-y: auto;">
+                                                {{ encrypted_message }}
+                                            </div>
+                                            <button class="btn btn-outline-success btn-sm mt-4 w-100"
+                                                onclick="copyToClipboard('{{ encrypted_message }}')">
+                                                <i class="bi bi-clipboard me-1"></i>Copy Encrypted Text
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- QR Code Section -->
+                                <div class="col-lg-4 col-md-12">
+                                    <div class="card h-100 border-0"
+                                        style="background: linear-gradient(180deg, #f0f8ff 0%, #e6f3ff 100%); border-radius: 15px;">
+                                        <div class="card-body p-5 text-center d-flex flex-column">
+                                            <h5 class="card-title text-info mb-4">
+                                                <i class="bi bi-qr-code me-2"></i>QR Code
+                                            </h5>
+                                            <div class="flex-grow-1 d-flex align-items-center justify-content-center">
+                                                <div class="qr-container p-3"
+                                                    style="background: white; border-radius: 10px; max-width: 100%;">
+                                                    <img src="data:image/png;base64,{{ qr_data }}" alt="QR Code"
+                                                        class="img-fluid"
+                                                        style="max-width: 170px; width: 100%; height: auto;">
+                                                </div>
+                                            </div>
+                                            <div class="mt-auto">
+                                                <p class="text-muted mb-3" style="font-size: 0.9rem;">Scan to get
+                                                    encrypted message</p>
+                                                <button class="btn btn-outline-info btn-sm w-100"
+                                                    onclick="downloadQR()">
+                                                    <i class="bi bi-download me-1"></i>Download QR
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons at Bottom -->
+                            <div class="text-center mt-5">
+                                <div class="d-flex justify-content-center gap-3">
+                                    <a href="{{ url_for('encrypt_quote') }}" class="btn btn-warning btn-lg px-4">
+                                        <i class="bi bi-arrow-clockwise me-2"></i>Encrypt Another Quote
+                                    </a>
+                                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary btn-lg px-4">
+                                        <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function () {
+                // Show success message
+                const btn = event.target;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<i class="bi bi-check me-1"></i>Copied!';
+                btn.classList.remove('btn-outline-success');
+                btn.classList.add('btn-success');
+
+                setTimeout(function () {
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-outline-success');
+                }, 2000);
+            }).catch(function (err) {
+                console.error('Could not copy text: ', err);
+                alert('Could not copy to clipboard');
+            });
+        }
+
+        function downloadQR() {
+            const qrImg = document.querySelector('.qr-container img');
+            const link = document.createElement('a');
+            link.download = 'encrypted_message_qr.png';
+            link.href = qrImg.src;
+            link.click();
+        }
+
+        // Logout confirmation function
+        function confirmLogout() {
+            // Show custom modal instead of browser confirm
+            const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+            logoutModal.show();
+            return false; // Prevent form submission
+        }
+
+        // Handle actual logout
+        function performLogout() {
+            // Submit the logout form
+            document.getElementById('logoutForm').submit();
+        }
+    </script>
+
+    <!-- Custom Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header border-0 bg-gradient text-white"
+                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h5 class="modal-title" id="logoutModalLabel">
+                        <i class="bi bi-box-arrow-right me-2"></i>
+                        Confirm Logout
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div class="mb-3">
+                        <i class="bi bi-question-circle text-warning" style="font-size: 3rem;"></i>
+                    </div>
+                    <h6 class="mb-3">Are you sure you want to logout?</h6>
+                    <p class="text-muted mb-0">You will need to log in again to access your account and continue your
+                        tarot
+                        journey.</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i>
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="performLogout()">
+                        <i class="bi bi-box-arrow-right me-1"></i>
+                        Yes, Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

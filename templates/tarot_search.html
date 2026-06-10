@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tarot Card Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg fixed-top custom-bar">
+            <div class="container-fluid">
+                <!-- Logo -->
+                <a class="navbar-brand d-flex align-items-center" href="#">
+                    <img src="{{ url_for('static', filename='image/tarologo.png') }}" alt="Tarot Logo" class="me-2"
+                        style="max-width: 50 px ; max-height: 50px;">
+                    <span style="
+  font-size: larger;
+  font-family: Geneva;
+  letter-spacing: 3px;              /* adds spacing between letters */
+  padding: 6px 12px;                /* adds gap around the text */
+  text-shadow: 0 2px 6px rgba(255, 193, 7, 0.5); /* warm golden glow */
+  display: inline-block;            /* ensures padding shows properly */
+  font-weight: bold;
+">
+                        DAILY TAROT
+                    </span>
+                </a>
+
+                <!-- Navbar Toggler (for mobile) -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Menu -->
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="/dashboard">HOME</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/tarot_search">SEARCH CARDS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/about">ABOUT</a>
+                        </li>
+                        <li class="nav-item">
+                            <!-- Logout Button -->
+                            <form id="logoutForm" action="/logout" method="post" onsubmit="return confirmLogout()">
+                                <button type="submit" class="logout-btn">Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="flash-message flash-{{ category }}" id="flash-{{ loop.index }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="container-fluid dashboard-container">
+
+        <div class="row g-4 mt-1">
+            <!-- Search Section with Cards Display -->
+            <div class="col-12 mx-auto">
+                <section class="card search-section text-center mx-auto shadow-lg"
+                    style="background: rgba(255, 254, 249, 0.95); backdrop-filter: blur(10px);">
+                    <div class="card-body d-flex flex-column justify-content-between position-relative">
+                        <div class="flex-grow-1">
+                            <h2 class="card-title mb-3 pt-2" style="font-size: 1.5rem;"><b>Find Your Tarot Card</b></h2>
+
+                            <form class="d-flex justify-content-center mb-2" role="search" method="get"
+                                action="/tarot_search">
+                                <div class="input-group" style="max-width: 500px;">
+                                    <input class="form-control me-3" type="search" name="q"
+                                        placeholder="Search for a tarot card..." aria-label="Search"
+                                        value="{{ query }}">
+                                    <button class="btn btn-warning" type="submit">
+                                        <i class="bi bi-search"></i> Search
+                                    </button>
+                                </div>
+                            </form>
+
+                            <!-- Filter Buttons -->
+                            <div class="filter-buttons mb-1">
+                                <div class="btn-group flex-wrap" role="group" aria-label="Card filters">
+                                    <a href="/tarot_search" class="btn btn-outline-secondary {{ 'active' if not filter_type else '' }}">
+                                        <i class="bi bi-grid-3x3-gap"></i> All Cards
+                                    </a>
+                                    <a href="/tarot_search?filter=major" class="btn btn-outline-primary {{ 'active' if filter_type == 'major' else '' }}">
+                                        <i class="bi bi-star"></i> Major Arcana
+                                    </a>
+                                    <a href="/tarot_search?filter=minor" class="btn btn-outline-info {{ 'active' if filter_type == 'minor' else '' }}">
+                                        <i class="bi bi-grid"></i> Minor Arcana
+                                    </a>
+                                    <a href="/tarot_search?filter=wands" class="btn btn-outline-warning {{ 'active' if filter_type == 'wands' else '' }}">
+                                        <i class="bi bi-fire"></i> Wands
+                                    </a>
+                                    <a href="/tarot_search?filter=cups" class="btn btn-outline-success {{ 'active' if filter_type == 'cups' else '' }}">
+                                        <i class="bi bi-droplet"></i> Cups
+                                    </a>
+                                    <a href="/tarot_search?filter=swords" class="btn btn-outline-danger {{ 'active' if filter_type == 'swords' else '' }}">
+                                        <i class="bi bi-lightning"></i> Swords
+                                    </a>
+                                    <a href="/tarot_search?filter=pentacles" class="btn btn-outline-dark {{ 'active' if filter_type == 'pentacles' else '' }}">
+                                        <i class="bi bi-gem"></i> Pentacles
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Cards Display Inside Search Section -->
+                            <div class="cards-scroll-container px-2"
+                                style="max-height: 460px; overflow-y: auto; border: 1px solid #dee2e6; border-radius: 8px; background-color: #f8f9fa;">
+                                <div class="row g-3 cards-container">
+
+                                    {% for card in cards %}
+                                    <div class="col mt-0" style="flex: 0 0 25%; max-width: 25%;">
+                                        <div class="card tarot-card-spread flex-fill p-4">
+                                            <div class="tarot-image-wrapper">
+                                                
+                                                {% if card.get('image') %}
+                                                <img src="{{ card.image }}" class="tarot-image-wrapper" style="width: auto;"
+                                                    alt="{{ card.name }}" "
+                                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                                {% else %}
+                                                <div class="d-flex align-items-center justify-content-center bg-gradient"
+                                                    style="height: 220px; width: 200px;"
+                                                    data-card-name="{{ card.name }}">
+                                                    <div class="text-center">
+                                                        <i class="bi bi-stars"
+                                                            style="font-size: 2.5rem; margin-bottom: 0.5rem;"></i>
+                                                        <div
+                                                            style="font-size: 0.7rem; font-weight: bold; text-shadow: 1px 1px 2px rgba(0,0,0,0.8);">
+                                                            TAROT</div>
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="tarot-scrollable">
+                                                <div class="card-body d-flex flex-column text-start p-2">
+                                                    <h5 class="card-title text-center fw-semibold mb-1 justify-content-center">
+                                                        <i class="bi bi-sun me-1 text-warning"></i>{{ card['name'] }}
+                                                    </h5>
+                                                    <p class="card-text text-success small mb-1">
+                                                        <i class="bi bi-arrow-up-circle me-1"></i>Means: {{
+                                                        card['meaning_up'] }}
+                                                    </p>
+                                                    <p class="card-text text-danger small mb-1">
+                                                        <i class="bi bi-arrow-down-circle me-1"></i>But Reversed: {{
+                                                        card['meaning_rev'] }}
+                                                    </p>
+                                                    <p class="card-text text-muted small mb-0">{{ card['desc'] }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            {% if not cards and query %}
+                            <div class="no-results mt-4">
+                                <h4><i class="bi bi-search"></i> No Cards Found</h4>
+                                <p>No tarot cards found for "{{ query }}". Try searching with different keywords.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="site-footer text-center mt-4">
+        <small>Powered by Tarot API (tarotapi.dev), ZenQuotes (zenquotes.io), Open-Meteo (open-meteo.com)</small>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        window.addEventListener("scroll", function () {
+            const navbar = document.querySelector(".custom-bar");
+            if (window.scrollY > 30) {
+                navbar.classList.add("scrolled");
+            } else {
+                navbar.classList.remove("scrolled");
+            }
+        });
+
+        // Auto-dismiss flash messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function () {
+            const flashMessages = document.querySelectorAll('.flash-message');
+
+            flashMessages.forEach(function (message) {
+                // Show the message
+                setTimeout(function () {
+                    message.style.opacity = '1';
+                    message.style.transform = 'translateX(0)';
+                }, 100);
+
+                // Auto-dismiss after 5 seconds
+                setTimeout(function () {
+                    message.style.opacity = '0';
+                    message.style.transform = 'translateX(100%)';
+
+                    // Remove from DOM after animation completes
+                    setTimeout(function () {
+                        message.remove();
+                    }, 300);
+                }, 5000);
+            });
+        });
+
+        // Logout confirmation function
+        function confirmLogout() {
+            // Show custom modal instead of browser confirm
+            const logoutModal = new bootstrap.Modal(document.getElementById('logoutModal'));
+            logoutModal.show();
+            return false; // Prevent form submission
+        }
+
+        // Handle actual logout
+        function performLogout() {
+            // Submit the logout form
+            document.getElementById('logoutForm').submit();
+        }
+    </script>
+
+
+    <!-- Custom Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header border-0 bg-gradient text-white"
+                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h5 class="modal-title" id="logoutModalLabel">
+                        <i class="bi bi-box-arrow-right me-2"></i>
+                        Confirm Logout
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div class="mb-3">
+                        <i class="bi bi-question-circle text-warning" style="font-size: 3rem;"></i>
+                    </div>
+                    <h6 class="mb-3">Are you sure you want to logout?</h6>
+                    <p class="text-muted mb-0">You will need to log in again to access your account and continue your
+                        tarot
+                        journey.</p>
+                </div>
+                <div class="modal-footer border-0 justify-content-center">
+                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle me-1"></i>
+                        Cancel
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="performLogout()">
+                        <i class="bi bi-box-arrow-right me-1"></i>
+                        Yes, Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

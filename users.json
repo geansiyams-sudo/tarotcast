@@ -1,0 +1,30 @@
+{
+    "gabihanmerantoneth@gmail.com": {
+        "fullname": "Merantoneth gabihan",
+        "email": "gabihanmerantoneth@gmail.com",
+        "password": null,
+        "totp_secret": "4VBMC343OQSDXWJSI7MDSKKPZMIGMFVQ",
+        "verified": true
+    },
+    "merantonethgripo@gmail.com": {
+        "fullname": "Mer Antoneth Gripo",
+        "email": "merantonethgripo@gmail.com",
+        "password": "gripo123",
+        "totp_secret": "IBWFH7IGYA7HAWWPA6S2KNBIMUSDH3YU",
+        "verified": true
+    },
+    "maggonce21@gmail.com": {
+        "fullname": "Jason Gripo",
+        "email": "maggonce21@gmail.com",
+        "password": "@Gripo123",
+        "totp_secret": "6NZRWFPQCUFBUT5LAXHDCK2LWSIDV4PZ",
+        "verified": true
+    },
+    "mercygripo396@gmail.com": {
+        "fullname": "Mercy Gripo",
+        "email": "mercygripo396@gmail.com",
+        "password": null,
+        "totp_secret": "KGFC6TMASYEKSQDXK66E3XFRJNCVRDQJ",
+        "verified": true
+    }
+}

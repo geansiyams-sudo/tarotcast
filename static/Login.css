@@ -1,0 +1,283 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+
+
+/* --- General Reset --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+h1, h2, h3, h4, h5 {
+    font-family: 'Playfair Display', serif;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 10px rgba(255, 223, 186, 0.5);
+  }
+  body, p, span {
+    font-family: 'Nunito', sans-serif;
+  }
+
+/* --- Body --- */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(135deg, #470d6b, #23126d 70%);
+    margin: 0;
+}
+
+/* --- Container --- */
+.container {
+    display: flex;
+    width: 1000px;
+    height: 600px;
+    background: white;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(80, 0, 120, 0.25);
+    position: relative;
+}
+
+/* --- Left Section --- */
+.left {
+    width: 55%;
+    background: linear-gradient(135deg, #8e24aa, #6a1b9a);
+    color: #fff8e1;
+    padding: 60px 50px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Light mystical glow */
+.left::before {
+    content: "";
+    position: absolute;
+    bottom: -50px;
+    left: -50px;
+    width: 120%;
+    height: 120%;
+    background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.15), transparent 60%);
+    border-radius: 60% 40% 40% 60%;
+    z-index: 0;
+}
+
+/* --- Left Content --- */
+.left img {
+    width: 70px;
+    position: relative;
+    z-index: 1;
+}
+
+.left h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 15px 0 5px;
+    position: relative;
+    z-index: 1;
+    color: #fff176;
+}
+
+.left h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    font-weight: 800;
+    position: relative;
+    z-index: 1;
+    color: #fdd835;
+}
+
+.left p {
+    font-size: 15px;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Right Section --- */
+.right {
+    width: 45%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    padding: 40px;
+}
+
+.right h2 {
+    color: #6a1b9a;
+    font-size: 28px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.right p {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.right form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* --- Inputs --- */
+.right input {
+    width: 100%;
+    background: #f3e5f5;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.right input:focus {
+    background: #ede7f6;
+    border: 1px solid #8e24aa;
+}
+
+/* --- Button --- */
+.right .btn {
+    background: linear-gradient(135deg, #fdd835, #fbc02d);
+    color: #311b92;
+    border: none;
+    padding: 12px 20px;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    box-shadow: 0 4px 10px rgba(253, 216, 53, 0.4);
+}
+
+.right .btn:hover {
+    background: linear-gradient(135deg, #fff176, #fdd835);
+    transform: scale(1.02);
+}
+
+/* --- Switch Links --- */
+.switch {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #444;
+}
+
+.switch a {
+    color: #6a1b9a;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.switch a:hover {
+    text-decoration: underline;
+}
+
+/* --- Divider --- */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #888;
+    font-size: 12px;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #ccc;
+}
+
+.divider:not(:empty)::before {
+    margin-right: 10px;
+}
+
+.divider:not(:empty)::after {
+    margin-left: 10px;
+}
+
+/* --- Google Button --- */
+.google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: #444;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    text-decoration: none;
+}
+
+.google-btn img {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.google-btn:hover {
+    background: #f5f5f5;
+    transform: scale(1.02);
+}
+
+a {
+    text-decoration: none;
+}
+
+/* --- Flash Messages --- */
+.flash-message {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 1000;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+    max-width: 300px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* --- Flash Variants --- */
+.flash-error {
+    background: #ab47bc;
+    color: white;
+    border-left: 4px solid #8e24aa;
+}
+
+.flash-success {
+    background: #fdd835;
+    color: #311b92;
+    border-left: 4px solid #fbc02d;
+}
+
+.flash-warning {
+    background: #ffeb3b;
+    color: #4a148c;
+    border-left: 4px solid #fbc02d;
+}
+
+.flash-info {
+    background: #7e57c2;
+    color: white;
+    border-left: 4px solid #5e35b1;
+}

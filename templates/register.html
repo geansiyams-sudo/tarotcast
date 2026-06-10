@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <!-- Left Side -->
+        <div class="left">
+            <img src="{{ url_for('static', filename='image/tarologo.png') }}" alt="Logo"
+                style="max-width: 20rem; height: auto;">
+
+            <h2>Daily Tarot Cards</h2>
+            <h1>Welcome Back!</h1>
+            <p>To stay connected with us<br>please login with your personal info</p>
+        </div>
+
+        <!-- Right Side -->
+        <div class="right">
+            <h2>Welcome</h2>
+            <p>Create your account to get started</p>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash-message flash-{{ category }}" id="flash-{{ loop.index }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <form method="POST" action="/register">
+                <input type="text" name="fullname" placeholder="Full Name" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+                <button type="submit" class="btn">SIGN UP</button>
+            </form>
+            <p class="switch">Already have an account? <a href="/login">Sign In</a></p>
+
+            <div class="divider">OR</div>
+
+            <a href="{{ url_for('google_register') }}">
+                <button type="button" class="google-btn">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
+                    Sign up with Google
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Auto-dismiss flash messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function () {
+            const flashMessages = document.querySelectorAll('.flash-message');
+
+            flashMessages.forEach(function (message) {
+                // Show the message
+                setTimeout(function () {
+                    message.style.opacity = '1';
+                    message.style.transform = 'translateX(0)';
+                }, 100);
+
+                // Auto-dismiss after 5 seconds
+                setTimeout(function () {
+                    message.style.opacity = '0';
+                    message.style.transform = 'translateX(100%)';
+
+                    // Remove from DOM after animation completes
+                    setTimeout(function () {
+                        message.remove();
+                    }, 300);
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+
+</html>
